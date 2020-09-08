@@ -18,8 +18,8 @@
     <div class="btnArea">
 
       <div v-if="isResult" class="row justify-content-between">
-        <span id="customBtn" class="btn btn-lg col-8 customText" :class="btncolor">
-          {{yourRange}} ({{yourBMI}})
+        <span id="customBtn" class="btn btn-lg col-8 customText" :class="labelColor">
+          {{Range}} ({{BMI}})
         </span>
         <button type="button" class="btn btn-lg btn-dark col-3" @click="cancel">
           <i class="fas fa-undo"></i>
@@ -34,7 +34,7 @@
 
     </div>
 
-    <p style="font-size:15px" class="text-danger" v-if="isCheck">請確實填寫資料!!</p>
+    <p class="null-warning" v-if="nullCheck">請確實填寫資料!!</p>
  
   </form>
   
@@ -46,123 +46,92 @@ export default {
     return{
       Height:'',
       Weight:'',
-      btncolor: '',
-      yourBMI:'',
-      yourRange:'',
+      Resultcolor:'',
+      BMI:'',
+      Range:'',
+      Date:'',
+
+      labelColor: '',
       isResult:false,
-      isCheck:false
+      nullCheck:false
     }
   },
   methods:{
     submitHandler(){
-      if(!this.Height){
-        this.isCheck = true
+      if(!this.Height || !this.Weight){
+        this.nullCheck = true
         return
       }
-      else if(!this.Weight){
-        this.isCheck = true
-        return
-      }
-      const BMI = this.getbmi();
-      const Result = this.getjudge(BMI);
-      const Color = this.getColor(Result);
-      const nowDate = this.getdate();
+      
+      this.bmiHandler();
+      this.rangeHandler(this.BMI);
+      this.dateHandler();
 
-      this.getbtncolor(Result);
-      this.yourBMI = BMI;
-      this.yourRange = Result;
-      this.isCheck = false;
+      this.nullCheck = false;
       this.isResult = true;
+
       this.$store.commit('ADD_LIST',{
-        result: Result,
-        bmi: BMI,
+        result: this.Range,
+        bmi: this.BMI,
         height: this.Height,
         weight: this.Weight,
-        color: Color,
-        date: nowDate
+        color: this.Resultcolor,
+        date: this.Date
       });
  
     },
-    getbmi(){
-      const vm = this;
-      const fixHeight = vm.Height / 100;
-      const result =  vm.Weight / (fixHeight * fixHeight)
-      const fixResult = result.toFixed(1)
-
-      return fixResult;
+    bmiHandler(){
+      let fixHeight = this.Height / 100;
+      let result =  (this.Weight / (fixHeight * fixHeight)).toFixed(1);
+      this.BMI = result;
     },
-    getjudge(data){
+    rangeHandler(data){
       if(data >= 35){
-        return '重度肥胖'
+        this.Range = '重度肥胖';
+        this.Resultcolor = 'red';
+        this.labelColor = 'bg-danger'
       }
       else if(30 <= data && data <35){
-        return '中度肥胖'
+        this.Range = '中度肥胖';
+        this.Resultcolor = 'pink';
+        this.labelColor = 'bg-pink'
       }
       else if(27 <= data && data < 30){
-        return '輕度肥胖'
+        this.Range = '輕度肥胖';
+        this.Resultcolor = 'orange';
+        this.labelColor = 'bg-orange'
       }
       else if(24 <= data && data < 27){
-        return '肥胖'
+        this.Range = '肥胖';
+        this.Resultcolor = 'yellow';
+        this.labelColor = 'bg-yellow'
       }
       else if(18.5 <= data && data < 24){
-        return '健康'
+        this.Range = '健康';
+        this.Resultcolor = 'green';
+        this.labelColor = 'bg-success'
       }
       else{
-        return '過輕'
+        this.Range = '過輕';
+        this.Resultcolor = 'blue';
+        this.labelColor = 'bg-primary'
       }
     },
-    getColor(data){
-      switch (data) {
-        case '重度肥胖':
-          return 'red';
+    dateHandler(){
+      let nowTime = new Date();
+      let year = nowTime.getFullYear();
+      let month = nowTime.getMonth()+1;
+      let day = nowTime.getDate();
 
-        case '中度肥胖':
-          return 'pink';
+      let result = month + "-" + day + "-" + year;
 
-        case '輕度肥胖':
-          return 'orange';
-
-        case '肥胖':
-          return 'yellow';
-
-        case '健康':
-          return 'green';
-
-        case '過輕':
-          return 'blue';
-      }
-    },
-    getdate(){
-      const time = new Date();
-      const day = time.getDate();
-      const month = time.getMonth()+1;
-      const year = time.getFullYear();
-      const date = month + "-" + day + "-" + year
-
-      return date    
+      this.Date = result;
     },
     cancel(){
       this.isResult = false;
-      this.btncolor = '';
       this.Height = '';
       this.Weight = '';
     },
-    getbtncolor(data){
-      switch(data){
-        case '重度肥胖':
-          return this.btncolor = 'bg-danger';
-        case '中度肥胖':
-          return this.btncolor = 'bg-pink';
-        case '輕度肥胖':
-          return this.btncolor = 'bg-orange';
-        case '肥胖':
-          return this.btncolor ='bg-yellow';
-        case '健康':
-          return this.btncolor ='bg-success';
-        case '過輕':
-          return this.btncolor ='bg-primary';
-      }
-    }
   },
 }
 </script>>
@@ -181,6 +150,12 @@ export default {
 .btnArea{
   margin: 0px auto;
   max-width: 360px;
+}
+
+.null-warning{
+  margin: 10px auto;
+  font-size: 15px;
+  color: rgb(216, 14, 14);
 }
 
 
@@ -209,9 +184,9 @@ export default {
 .bg-orange, .bg-pink, .bg-yellow{
   color: black;
 }
-/* */
 
 
+/*計算機動態輸入 */
 .form-label-group {
   position: relative;
   margin-bottom: 1rem;
