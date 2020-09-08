@@ -1,0 +1,51 @@
+/*製作RWD表格效果*/
+
+/*一般模式*/
+.rwdTable {
+  margin: 10px auto;
+  thead{
+    th{
+      color:rgb(197, 54, 54);
+    }
+  }
+  tr:nth-child(even){
+    background: rgba(rgb(107, 185, 236),.2);
+  }
+}
+
+.rwddel {
+  display: none;
+}
+
+/*RWD模式*/
+@media only screen and (max-width:768px){
+  .rwdTable{
+    thead{
+        display: none;
+    }
+    td{
+        position: relative;
+        display: block;
+    }
+    .rwdTitle:before{
+        content: attr(data-title);
+        display: inline-block;
+        width: auto;
+        min-width: 20%;
+        font-weight: 900;
+        padding-right: 1rem;
+        color:rgb(197, 54, 54)
+    }
+    .rwddel{
+        position: absolute;
+        display: inline;
+        right: 0;
+        top:0;
+        bottom:0;
+        margin:10px;
+    }
+    .del{
+        display: none;
+    }
+  }
+}

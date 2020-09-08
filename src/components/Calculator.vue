@@ -1,35 +1,43 @@
 <template>
-  <div>
+  
+  <form class="calcPanel" @keyup.enter="submitHandler">
+    <div class="bmiTitle">
+      <h3>BMI 計算機</h3>
+    </div>
 
-    <form class="form-signin">
-  <div class="text-center mb-4">
-    <h1 class="h3 mb-3 font-weight-normal">BMI 計算機</h1>
-  </div>
+    <div class="form-label-group">
+      <input type="text" id="inputHeight" class="form-control" placeholder="請輸入你的身高" v-model="Height" :disabled="isResult" onkeyup="value=value.replace(/[^\d]/g,'')">
+      <label for="inputHeight">請輸入你的身高 (cm)</label>
+    </div>
 
-  <div class="form-label-group">
+    <div class="form-label-group">
+      <input type="text" id="inputWeight" class="form-control" placeholder="請輸入你的體重"  v-model="Weight" :disabled="isResult" onkeyup="value=value.replace(/[^\d]/g,'')">
+      <label for="inputWeight">請輸入你的體重 (kg)</label>
+    </div>
+
+    <div class="btnArea">
+
+      <div v-if="isResult" class="row justify-content-between">
+        <span id="customBtn" class="btn btn-lg col-8 customText" :class="btncolor">
+          {{yourRange}} ({{yourBMI}})
+        </span>
+        <button type="button" class="btn btn-lg btn-dark col-3" @click="cancel">
+          <i class="fas fa-undo"></i>
+        </button>
+      </div>
+
+      <div v-else class="row justify-content-between">
+        <button type="button" class="btn btn-lg btn-dark col-12" @click="submitHandler">
+          開始計算
+        </button>
+      </div>
+
+    </div>
+
+    <p style="font-size:15px" class="text-danger" v-if="isCheck">請確實填寫資料!!</p>
  
-    <input type="text" id="inputHeight" class="form-control" placeholder="請輸入你的身高" v-model="Height" :disabled="isResult" onkeyup="value=value.replace(/[^\d]/g,'')">
-    <label for="inputHeight">請輸入你的身高 (cm)</label>
-  </div>
-
-  <div class="form-label-group">
-    <input type="text" id="inputWeight" class="form-control" placeholder="請輸入你的體重"  v-model="Weight" :disabled="isResult" onkeyup="value=value.replace(/[^\d]/g,'')">
-    <label for="inputWeight">請輸入你的體重 (kg)</label>
-  </div>
-
-  <span v-if="isResult" id="customlabel" class="btn btn-lg col-8" :class="btncolor">{{yourRange}} ({{yourBMI}})</span>
-  <span class="col-1"></span>
-  <button type="button" v-if="isResult" class="btn btn-lg  btn-dark col-3" @click="cancel">返回</button>
-  <button type="button" v-else class="btn btn-lg btn-dark btn-block"  @click="submitHandler">開始計算</button>
-
-  <p style="font-size:15px" class="text-danger" v-if="isCheck">請確實填寫資料!!</p>
-  <p style="font-size:15px" v-if="isResult">再點一次返回</p>
- 
-
-</form>
-
-
-  </div>
+  </form>
+  
 </template>
 
 <script>
@@ -109,13 +117,13 @@ export default {
           return 'red';
 
         case '中度肥胖':
-          return 'orange';
+          return 'pink';
 
         case '輕度肥胖':
-          return 'yellow';
+          return 'orange';
 
         case '肥胖':
-          return 'pink';
+          return 'yellow';
 
         case '健康':
           return 'green';
@@ -142,17 +150,17 @@ export default {
     getbtncolor(data){
       switch(data){
         case '重度肥胖':
-          return this.btncolor = 'btn-danger';
+          return this.btncolor = 'bg-danger';
         case '中度肥胖':
-          return this.btncolor = 'btn-warning';
+          return this.btncolor = 'bg-pink';
         case '輕度肥胖':
-          return this.btncolor = 'btn-yellow';
+          return this.btncolor = 'bg-orange';
         case '肥胖':
-          return this.btncolor ='btn-pink';
+          return this.btncolor ='bg-yellow';
         case '健康':
-          return this.btncolor ='btn-success';
+          return this.btncolor ='bg-success';
         case '過輕':
-          return this.btncolor ='btn-primary';
+          return this.btncolor ='bg-primary';
       }
     }
   },
@@ -160,27 +168,49 @@ export default {
 </script>>
 
 <style lang="scss" scoped>
-html,
-body {
-  height: 100%;
-}
-
-body {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #f5f5f5;
-}
-
-.form-signin {
-  width: 100%;
+.calcPanel{
   max-width: 420px;
   padding: 15px;
   margin: auto;
+  .bmiTitle{
+    text-align: center;
+    margin: 20px auto;
+  }
 }
+
+.btnArea{
+  margin: 0px auto;
+  max-width: 360px;
+}
+
+
+
+/*結果標籤客製化*/
+#customBtn{
+  cursor: default;
+}
+
+.bg-yellow{
+  background-color: rgb(236, 211, 72);
+}
+
+.bg-pink{
+  background-color: rgb(238, 156, 206);
+}
+
+.bg-orange{
+  background-color: orange;
+}
+
+.bg-danger, .bg-success, .bg-primary{
+  color:white;
+}
+
+.bg-orange, .bg-pink, .bg-yellow{
+  color: black;
+}
+/* */
+
 
 .form-label-group {
   position: relative;
@@ -240,27 +270,4 @@ body {
   font-size: 12px;
   color: #777;
 }
-@supports (-ms-ime-align: auto) {
-  .form-label-group > label {
-    display: none;
-  }
-  .form-label-group input::-ms-input-placeholder {
-    color: #777;
-  }
-}
-
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .form-label-group > label {
-    display: none;
-  }
-  .form-label-group input:-ms-input-placeholder {
-    color: #777;
-  }
-}
-
-#customlabel{
-  cursor: default;
-  pointer-events: none;
-}
-
 </style>

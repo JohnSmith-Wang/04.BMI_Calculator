@@ -1,34 +1,27 @@
 <template>
-  <div>
+  
+  <tr>
+    <td scope="col">
+      <strong><span class="colorTag" :class="getdata.color">{{getdata.result}}</span></strong>
+      <span class="rwddel" @click="destoryItem"><i class="icon text-danger fas fa-trash-alt"></i></span>
+    </td>
+    <td scope="col" data-title="BMI" class="rwdTitle"><strong>{{getdata.bmi}}</strong></td>
+    <td scope="col" data-title="身高" class="rwdTitle">{{getdata.height}}cm</td>
+    <td scope="col" data-title="體重" class="rwdTitle">{{getdata.weight}}kg</td>
+    <td scope="col" data-title="測量日期" class="rwdTitle">{{getdata.date}}</td>
+    <td scope="col" class="del">
+      <span @click="destoryItem">
+        <i class="fas fa-trash-alt text-danger icon"></i>
+      </span>
+    </td>
+  </tr>
 
-
-
-
-    <div class="media text-muted pt-3 border-bottom border-gray">
-      <tbody style="margin-bottom:10px">
-        <tr>
-          <td><div :id="getdata.color"></div></td>
-          <td width="200px"><strong>{{getdata.result}}</strong></td>
-          <td width="200px"><strong>{{getdata.bmi}}(BMI)</strong></td>
-          <td width="300px"><strong>身高:</strong> {{getdata.height}}cm</td>
-          <td width="800px"><strong>體重:</strong> {{getdata.weight}}kg</td>
-          <td id="date" width="200px"><strong>測量日期:</strong> {{getdata.date}}</td>
-          <td id="del" width="20px"><strong @click=" destoryItem">X</strong></td>
-        </tr>
-      </tbody>
-    </div>
-
-
-
-
-  </div>
 </template>
 
 <script>
 export default {
   data(){
     return{
-
     }
   },
   props:{
@@ -52,57 +45,49 @@ export default {
 }
 </script>
 
-<style scoped>
-#date {
-  font-size: 10px;
+<style lang="scss" scoped>
+.colorTag{
+  border-left-style: solid;
+  border-left-width: 10px;
+  padding: 5px;
 }
 
-#del {
-font-size: 20px;
-color: rgb(230, 88, 88);
-cursor: pointer;
+.icon{
+  border:solid 1px;
+  padding: 5px;
+  border-radius: 5px;
 }
 
-#red {
-  background-color:rgb(230, 34, 34);
-  height: 20px;
-  width: 10px;
-  margin: 5px;
+.del,.rwddel {
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
 }
 
-#orange {
-  background-color:rgb(240, 161, 44);
-  height: 20px;
-  width: 10px;
-  margin: 5px;
+/*色碼選擇器設定*/
+.red {
+  border-left-color:rgb(230, 34, 34);
 }
 
-#yellow {
-  background-color:rgb(236, 211, 72);
-  height: 20px;
-  width: 10px;
-  margin: 5px;
+.orange {
+  border-left-color:rgb(240, 161, 44);
 }
 
-#pink {
-  background-color:rgb(238, 156, 206);
-  height: 20px;
-  width: 10px;
-  margin: 5px;
+.yellow {
+  border-left-color:rgb(236, 211, 72);
 }
 
-#green {
-  background-color:rgb(40, 216, 113);
-  height: 20px;
-  width: 10px;
-  margin: 5px;
+.pink {
+  border-left-color:rgb(238, 156, 206);
 }
 
-#blue {
-  background-color:rgb(81, 178, 235);
-  height: 20px;
-  width: 10px;
-  margin: 5px;
+.green {
+  border-left-color:rgb(40, 216, 113);
+}
+
+.blue {
+  border-left-color:rgb(81, 178, 235);
 }
 
 </style>
